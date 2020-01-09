@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,10 +25,7 @@ public class TrusteeServerApplicationTests {
     JacksonTester<Ventil> ventilJacksonTester;
     @Autowired
     MockMvc mockMVC;
-    @Autowired
-    Ventil ventil;
-    @Autowired
-    Tankvorgang tankvorgang;
+
     @BeforeEach
     void init(){
         JacksonTester.initFields(this, new ObjectMapper());
@@ -39,7 +37,7 @@ public class TrusteeServerApplicationTests {
 
         MvcResult result = mockMVC.perform(MockMvcRequestBuilders.post("/neuerVorgang")
         .contentType(MediaType.APPLICATION_JSON)
-                .content(ventilJacksonTester.write(ventil).getJson())
+                .content(ventilJacksonTester.write(new Ventil()).getJson())
         .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
         .andReturn();
     }
@@ -48,8 +46,11 @@ public class TrusteeServerApplicationTests {
     void testAuftankenabgeschlossen() throws Exception {
         MvcResult result = mockMVC.perform(MockMvcRequestBuilders.post("/neuerVorgang")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(tankvorgangJacksonTester.write(tankvorgang).getJson())
+                .content(tankvorgangJacksonTester.write(new Tankvorgang()).getJson())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
+
+
     }
 }
